@@ -2150,6 +2150,31 @@ async function init(){
   document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeDrawer(); });
 
   document.getElementById('btnExport').addEventListener('click', exportCSV);
+  async function cargarMaestroAutomatico() {
+    try {
+        const response = await fetch('./Maestro.xlsx');
+
+        if (!response.ok) {
+            throw new Error('No se encontró Maestro.xlsx');
+        }
+
+        const buffer = await response.arrayBuffer();
+
+        const file = new File(
+            [buffer],
+            'Maestro.xlsx',
+            {
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            }
+        );
+
+        await handleUploadedFile(file);
+
+        console.log('Maestro cargado automáticamente');
+    } catch (err) {
+        console.error('Error cargando Maestro.xlsx:', err);
+    }
+}
 
   const zone = document.getElementById('uploadZone');
   const fileInput = document.getElementById('fileInput');
@@ -2673,5 +2698,8 @@ t2Init();
 
 
 </script>
+window.addEventListener('load', function () {
+    cargarMaestroAutomatico();
+});
 </body>
 </html>
